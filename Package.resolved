@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "MAMSVectors",
+        "repositoryURL": "https://github.com/mmuellersoppart/MAMSVectors",
+        "state": {
+          "branch": null,
+          "revision": "2c1a0203879543fd6e4e445b587ff344d1199c7b",
+          "version": "0.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
