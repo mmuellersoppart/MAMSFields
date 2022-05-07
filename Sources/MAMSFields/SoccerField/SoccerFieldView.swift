@@ -9,10 +9,18 @@ import SwiftUI
 import MAMSVectors
 
 public struct SoccerFieldView: View {
-    @State var radians: Double = 0
+    var radians: Double = 0
+    var strokeColor: Color = Color.white
+    var strokeSize: Double = 1.0
+    var fillColor: Color = Color.green
+    
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green) {
+        self.radians = radians
+        self.strokeColor = strokeColor
+        self.fillColor = fillColor
+    }
     
     public var body: some View {
-        VStack {
         ZStack {
             Color.gray
             Canvas { context, size in
@@ -27,62 +35,60 @@ public struct SoccerFieldView: View {
                 let totalFieldPath = soccerField.totalField
                 
                 context.fill(totalFieldPath, with: .color(.clear))
-                context.stroke(totalFieldPath, with: .color(.white))
+//                context.stroke(totalFieldPath, with: .color(.white))
                 
                 let fieldPath = soccerField.field
                 
-                context.fill(fieldPath, with: .color(.green))
-                context.stroke(fieldPath, with: .color(.white))
+                context.fill(fieldPath, with: .color(fillColor))
+                context.stroke(fieldPath, with: .color(strokeColor))
                 
                 // midline
                 let midlinePath = soccerField.midline
-                context.stroke(midlinePath, with: .color(.white))
+                context.stroke(midlinePath, with: .color(strokeColor))
                 
                 // penalty boxes
                 // ********************
                 let penaltyBoxCirclePaths = soccerField.penaltyCircles
-                context.stroke(penaltyBoxCirclePaths, with: .color(.white))
+                context.stroke(penaltyBoxCirclePaths, with: .color(strokeColor))
                 
                 let penaltyBoxesPaths = soccerField.penaltyBoxes
-                context.fill(penaltyBoxesPaths, with: .color(.green))
-                context.stroke(penaltyBoxesPaths, with: .color(.white))
+                context.fill(penaltyBoxesPaths, with: .color(fillColor))
+                context.stroke(penaltyBoxesPaths, with: .color(strokeColor))
                 
                 let penaltyDotPaths = soccerField.penaltyDots
-                context.fill(penaltyDotPaths, with: .color(.white))
+                context.fill(penaltyDotPaths, with: .color(strokeColor))
                 
                 // goals
                 // ********************
                 let goalPaths = soccerField.goals
-                context.fill(goalPaths, with: .color(.green))
-                context.stroke(goalPaths, with: .color(.white))
+                context.fill(goalPaths, with: .color(fillColor))
+                context.stroke(goalPaths, with: .color(strokeColor))
                 
                 // goalie box
                 let goalieBoxPaths = soccerField.goalieBoxes
-                context.stroke(goalieBoxPaths, with: .color(.white))
+                context.stroke(goalieBoxPaths, with: .color(strokeColor))
                 
                 
                 // center circle
                 // ********************
                 let centerCirclePath = soccerField.centerCircle
-                context.stroke(centerCirclePath, with: .color(.white))
+                context.stroke(centerCirclePath, with: .color(strokeColor))
                 
                 //center dot
                 let centerDotPath = soccerField.centerDot
-                context.fill(centerDotPath, with: .color(.white))
+                context.fill(centerDotPath, with: .color(strokeColor))
                 
                 //TODO: corner
                 let cornerPaths = soccerField.corners
-                context.stroke(cornerPaths, with: .color(.white))
+                context.stroke(cornerPaths, with: .color(strokeColor))
             }
-        }.frame(width: 200, height: 300)
-            Slider(value: $radians, in:Double(0)...(2.0 * Double.pi))
         }
     }
 }
 
 struct SoccerFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        SoccerFieldView()
+        SoccerFieldView(radians: 0.0)
     }
 }
 
