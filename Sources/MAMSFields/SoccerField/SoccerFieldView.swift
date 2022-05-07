@@ -11,13 +11,14 @@ import MAMSVectors
 public struct SoccerFieldView: View {
     var radians: Double = 0
     var strokeColor: Color = Color.white
-    var strokeSize: Double = 1.0
+    var strokeWidth: Double = 1.0
     var fillColor: Color = Color.green
     
-    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green) {
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green, strokeWidth: Double = 1) {
         self.radians = radians
         self.strokeColor = strokeColor
         self.fillColor = fillColor
+        self.strokeWidth = strokeWidth
     }
     
     public var body: some View {
@@ -35,25 +36,24 @@ public struct SoccerFieldView: View {
                 let totalFieldPath = soccerField.totalField
                 
                 context.fill(totalFieldPath, with: .color(.clear))
-//                context.stroke(totalFieldPath, with: .color(.white))
                 
                 let fieldPath = soccerField.field
                 
                 context.fill(fieldPath, with: .color(fillColor))
-                context.stroke(fieldPath, with: .color(strokeColor))
+                context.stroke(fieldPath, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 // midline
                 let midlinePath = soccerField.midline
-                context.stroke(midlinePath, with: .color(strokeColor))
+                context.stroke(midlinePath, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 // penalty boxes
                 // ********************
                 let penaltyBoxCirclePaths = soccerField.penaltyCircles
-                context.stroke(penaltyBoxCirclePaths, with: .color(strokeColor))
+                context.stroke(penaltyBoxCirclePaths, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 let penaltyBoxesPaths = soccerField.penaltyBoxes
                 context.fill(penaltyBoxesPaths, with: .color(fillColor))
-                context.stroke(penaltyBoxesPaths, with: .color(strokeColor))
+                context.stroke(penaltyBoxesPaths, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 let penaltyDotPaths = soccerField.penaltyDots
                 context.fill(penaltyDotPaths, with: .color(strokeColor))
@@ -62,17 +62,17 @@ public struct SoccerFieldView: View {
                 // ********************
                 let goalPaths = soccerField.goals
                 context.fill(goalPaths, with: .color(fillColor))
-                context.stroke(goalPaths, with: .color(strokeColor))
+                context.stroke(goalPaths, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 // goalie box
                 let goalieBoxPaths = soccerField.goalieBoxes
-                context.stroke(goalieBoxPaths, with: .color(strokeColor))
+                context.stroke(goalieBoxPaths, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 
                 // center circle
                 // ********************
                 let centerCirclePath = soccerField.centerCircle
-                context.stroke(centerCirclePath, with: .color(strokeColor))
+                context.stroke(centerCirclePath, with: .color(strokeColor), lineWidth: strokeWidth)
                 
                 //center dot
                 let centerDotPath = soccerField.centerDot
@@ -80,7 +80,7 @@ public struct SoccerFieldView: View {
                 
                 //TODO: corner
                 let cornerPaths = soccerField.corners
-                context.stroke(cornerPaths, with: .color(strokeColor))
+                context.stroke(cornerPaths, with: .color(strokeColor), lineWidth: strokeWidth)
             }
         }
     }
