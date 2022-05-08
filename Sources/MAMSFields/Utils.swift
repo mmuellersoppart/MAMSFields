@@ -13,7 +13,7 @@ import MAMSVectors
 /// We can extend CGRect
 
 /// Centers one object on another
-func centerOrigin(_ rect: CGSize, on background: CGRect) -> CGPoint {
+internal func centerOrigin(_ rect: CGSize, on background: CGRect) -> CGPoint {
     
     // width
     var originX: Double = 0
@@ -45,14 +45,14 @@ func centerOrigin(_ rect: CGSize, on background: CGRect) -> CGPoint {
 ///   - scale: 0-1, The scale of the bounding box incomparison the space given
 ///   - angle: 0-2π, Orientation of the field, where π is portrait
 /// - Returns: an outline stroke
-func boundingBox(canvasSize: CGSize, aspectRatio: Double, scale: Double, angle: Double) -> CGRect {
+internal func boundingBox(canvasSize: CGSize, aspectRatio: Double, scale: Double, angle: Double) -> CGRect {
     
     guard isClose(Double.pi, angle, error: 0.01) else { return CGRect()}
     
     return CGRect()
 }
 
-func isClose(_ lhs: Double, _ rhs: Double, error ε: Double) -> Bool {
+internal func isClose(_ lhs: Double, _ rhs: Double, error ε: Double) -> Bool {
     let Δ = lhs - rhs
     return abs(Δ) < ε
 }
@@ -69,57 +69,40 @@ internal func vectorForEachQuadrant(positionalVector posvec: PositionalVector2D)
     return [q1, q2, q3, q4]
 }
 
-//func determineFieldScale(boundaryH: CGFloat, boundaryW: Double, rotation: Double) -> Double {
-//    let centerPoint = Point2D(x: boundaryW/2, y: boundaryH/2)
-//    let fieldDimensionsW = BasicFieldDimensions.totalW
-//    let fieldDimensionsH = BasicFieldDimensions.totalH
-//    let q2PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: fieldDimensionsW/2, y: fieldDimensionsH/2)).copy(radians: rotation)
-//    let q3PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: fieldDimensionsW/2, y: -fieldDimensionsH/2)).copy(radians: rotation)
-//    
-//    let q2Intersection = findClosestIntersection(positionalVector: q2PosVector, xBoundaries: 0.0, boundaryW, yBoundaries: 0.0, boundaryH)
-//    let q3Intersection = findClosestIntersection(positionalVector: q3PosVector, xBoundaries: 0.0, boundaryW, yBoundaries: 0.0, boundaryH)
-//    
-//    let closestIntersection = centerPoint.distance(to: q2Intersection!) > centerPoint.distance(to: q3Intersection!) ? q3Intersection : q2Intersection
-//
-//    return centerPoint.distance(to: closestIntersection!) / centerPoint.distance(to: q2PosVector.tip)
-//}
-//
-//func determineFieldScale1(boundaryH: CGFloat, boundaryW: Double, rotation: Double) -> Path {
-//    let centerPoint = Point2D(x: boundaryW/2, y: boundaryH/2)
-//    let fieldDimensionsW = BasicFieldDimensions.totalW
-//    let fieldDimensionsH = BasicFieldDimensions.totalH
-//    
-//    let q2PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: fieldDimensionsW/2, y: fieldDimensionsH/2)).copy(radians: rotation)
-//    let q3PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: fieldDimensionsW/2, y: -fieldDimensionsH/2)).copy(radians: rotation)
-//    
-//    let q2Intersection = findClosestIntersection(positionalVector: q2PosVector, xBoundaries: 0.0, boundaryW, yBoundaries: 0.0, boundaryH)
-//    let q3Intersection = findClosestIntersection(positionalVector: q3PosVector, xBoundaries: 0.0, boundaryW, yBoundaries: 0.0, boundaryH)
-//    
-//    let closerIntersection = centerPoint.distance(to: q2Intersection!) > centerPoint.distance(to: q3Intersection!) ? q3Intersection : q2Intersection
-//    
-//    return Path { path in
-//        
-//        // draw center point
-//        path.move(to: centerPoint.asCGPoint)
-//        path.addPath(centerPoint.asPath(pointDiameter: 4))
-//        
-//        path.addPath(q2PosVector.asPath())
-//        
-//        // draw intersection points
-//        path.move(to: q2Intersection!.asCGPoint)
-//        path.addPath(q2Intersection!.asPath(pointDiameter: 6))
-//        
-//        path.move(to: q3Intersection!.asCGPoint)
-//        path.addPath(q3Intersection!.asPath(pointDiameter: 6))
-//        
-//        path.move(to: closerIntersection!.asCGPoint)
-//        path.addPath(closerIntersection!.asPath(pointDiameter: 12))
-//    }
-//    
-//    
-//}
+/// Produces four Position Vectors whose tips represent a box.
+/// - Parameters:
+///   - vectorStartPoint: Where all the positional vectors should start
+///   - upperLeftPoint: Upper left point of the box
+///   - boxSize: The box's height and width
+/// - Returns: Positional Vectors that describe the box
+internal func boxToVectors(vectorStartPoint: Point2D, upperLeftPoint: Point2D, boxSize: CGSize) -> [PositionalVector2D] {
+    let upperRightPoint = Point2D(x: upperLeftPoint.x + Double(boxSize.width), y: upperLeftPoint.y)
+    let lowerLeftPoint = Point2D(x: upperLeftPoint.x, y: upperLeftPoint.y + Double(boxSize.height))
+    let lowerRightPoint = Point2D(x: upperLeftPoint.x + Double(boxSize.width), y: upperLeftPoint.y + Double(boxSize.height))
+    
+    let upperPoints = [upperLeftPoint, upperRightPoint, lowerRightPoint, lowerLeftPoint]
+    let upperVectors = upperPoints.map { pt in PositionalVector2D(start: vectorStartPoint, end: pt)}
+    
+    return upperVectors
+}
 
-func findClosestIntersection(positionalVector posVector: PositionalVector2D, xBoundaries: Double..., yBoundaries: Double...) -> Point2D? {
+internal func vectorsToPath(positionalVectors posvecs: [PositionalVector2D]) -> Path {
+    
+    guard posvecs.count > 0 else { return Path() }
+    
+    return Path { path in
+        path.move(to: posvecs.first!.tip.asCGPoint)
+        
+        for vec in posvecs {
+            path.addLine(to: vec.tip.asCGPoint)
+        }
+        
+        path.move(to: posvecs.last!.tip.asCGPoint)
+        path.addLine(to: posvecs.first!.tip.asCGPoint)
+    }
+}
+
+internal func findClosestIntersection(positionalVector posVector: PositionalVector2D, xBoundaries: Double..., yBoundaries: Double...) -> Point2D? {
     //TODO: sort x and y boundaries and make sure it goes from least to most.
     
     let centerPoint = posVector.origin

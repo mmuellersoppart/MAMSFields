@@ -12,7 +12,7 @@ import MAMSVectors
 typealias Size2D = Point2D
 
 // modifies the original dimensions, in terms of scale and rotation to fit the given bounds.
-final class SoccerField {
+class SoccerField: Field {
     private var scale: Double = 1
     private var radians: Double = 0
     private var centerPoint: Point2D = Point2D(x: 0, y: 0)
@@ -59,8 +59,7 @@ final class SoccerField {
         let fieldH = SoccerFieldConstants.fieldH
         let topLine = centerPoint.y - fieldH/2 - goalSize.height
         
-        // establish size
-        return createMirroringRectangles(goalSize, topLine)
+        return createMirroringRectangles(rectSize: goalSize, yValue: topLine)
     }
     
     var goalieBoxes: Path {
@@ -68,7 +67,7 @@ final class SoccerField {
         let fieldH = SoccerFieldConstants.fieldH
         let topLine = centerPoint.y - fieldH/2
         
-        return createMirroringRectangles(goalieArea, topLine)
+        return createMirroringRectangles(rectSize: goalieArea, yValue: topLine)
     }
     
     var penaltyBoxes: Path {
@@ -76,7 +75,7 @@ final class SoccerField {
         let fieldH = SoccerFieldConstants.fieldH
         let topLine = centerPoint.y - fieldH/2
         
-        return createMirroringRectangles(penaltyBoxSize, topLine)
+        return createMirroringRectangles(rectSize: penaltyBoxSize, yValue: topLine)
     }
     
     var centerCircle: Path {
@@ -148,93 +147,9 @@ final class SoccerField {
         }
     }
     
-    //    var cornerArcs: [Path] {
-    //
-    //        var cornerPaths: [Path] = []
-    //
-    //        let cornerRadius = SoccerFieldDimensions.cornerArcRadius * meterScaled
-    //        var points = corners(rect: absField)
-    //
-    //        if !isPortrait {
-    //            points = points.map(xyFlip)
-    //        }
-    //
-    //        var angles = [Angle(degrees: 0), Angle(degrees: 90), Angle(degrees: 180), Angle(degrees: 270)]
-    //
-    //        if !isPortrait {
-    //
-    //            angles = angles.map {
-    //
-    //                if $0 == Angle(degrees: 90) || $0 == Angle(degrees: 270) {
-    //                    return $0 + Angle(degrees: 180)
-    //                }
-    //                return $0
-    //            }
-    //        }
-    //
-    //        for (pt, angle) in zip(points, angles) {
-    //            var path = Path()
-    //            path.addArc(center: pt, radius: cornerRadius, startAngle: angle, endAngle: angle + Angle(degrees: 90), clockwise: false)
-    //            cornerPaths.append(path)
-    //        }
-    //
-    //        return cornerPaths
-    //    }
-    
-    fileprivate func createMirroringRectangles(_ rectSize: CGSize, _ yValue: Double) -> Path {
-        // establish size
-        let upperLeftPoint = Point2D(x: centerPoint.x - rectSize.width/2, y: yValue)
-        
-        let upperVectors: [PositionalVector2D] = boxToVectors(upperLeftPoint: upperLeftPoint, goalSize: rectSize)
-        
-        let upperVectorsAdj: [PositionalVector2D] = upperVectors.scaleAndRotate(scale: scale, rotate: radians)
-        let upperGoalPaths = vectorsToPath(positionalVectors: upperVectorsAdj)
-        
-        let lowerVectorsAdj: [PositionalVector2D] = upperVectors.map {posvec in reflectOverMidline(midlineY: centerPoint.y, positionalVector: posvec)}.scaleAndRotate(scale: scale, rotate: radians)
-        
-        let lowerGoalPaths = vectorsToPath(positionalVectors: lowerVectorsAdj)
-        
-        return Path { path in
-            path.addPath(upperGoalPaths)
-            path.addPath(lowerGoalPaths)
-        }
-    }
-    
     init(scale: Double, radians: Double, centerPoint: Point2D) {
         self.radians = radians
         self.scale = scale
         self.centerPoint = centerPoint
-    }
-    
-    private func reflectOverMidline(midlineY: Double, positionalVector: PositionalVector2D) -> PositionalVector2D {
-        return positionalVector.copy(vectorY: -positionalVector.vector.y)
-    }
-    
-    /// Produces four Position Vectors whose tips represent a box.
-    private func boxToVectors(upperLeftPoint: Point2D, goalSize: CGSize) -> [PositionalVector2D] {
-        let upperRightPoint = Point2D(x: upperLeftPoint.x + Double(goalSize.width), y: upperLeftPoint.y)
-        let lowerLeftPoint = Point2D(x: upperLeftPoint.x, y: upperLeftPoint.y + Double(goalSize.height))
-        let lowerRightPoint = Point2D(x: upperLeftPoint.x + Double(goalSize.width), y: upperLeftPoint.y + Double(goalSize.height))
-        
-        let upperPoints = [upperLeftPoint, upperRightPoint, lowerRightPoint, lowerLeftPoint]
-        let upperVectors = upperPoints.map { pt in PositionalVector2D(start: centerPoint, end: pt)}
-        
-        return upperVectors
-    }
-    
-    private func vectorsToPath(positionalVectors posvecs: [PositionalVector2D]) -> Path {
-        
-        guard posvecs.count > 0 else { return Path() }
-        
-        return Path { path in
-            path.move(to: posvecs.first!.tip.asCGPoint)
-            
-            for vec in posvecs {
-                path.addLine(to: vec.tip.asCGPoint)
-            }
-            
-            path.move(to: posvecs.last!.tip.asCGPoint)
-            path.addLine(to: posvecs.first!.tip.asCGPoint)
-        }
     }
 }
