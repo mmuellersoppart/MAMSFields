@@ -27,7 +27,8 @@ class BasketballFieldConstants {
     static let centerLineLength: CGFloat = fieldW
     
     static let centerPoint: CGPoint = CGPoint(x: totalW / 2, y: totalH / 2)
-    static let centerCircleRadius: CGFloat = 3.66 / 2
+    static let centerCircleInnerRadius: CGFloat = 1.22 / 2
+    static let centerCircleOuterRadius: CGFloat = 3.66 / 2
     
     // 3 point arc & box
     static let threePointArcRadius: CGFloat = 7.19
@@ -48,7 +49,7 @@ class BasketballFieldConstants {
     static let outerHoopBoxH: CGFloat = hoopBoxH
     static let outerHoopBoxW: CGFloat = hoopBoxW + 2 * 0.7
     
-    static let hoopBoxCircleRadius: CGFloat = centerCircleRadius
+    static let hoopBoxCircleRadius: CGFloat = centerCircleOuterRadius
     static let hoopBoxCircleDistFromTop: CGFloat = hoopBoxH
     
     static let restrictedAreaRadius: CGFloat = 1.22
