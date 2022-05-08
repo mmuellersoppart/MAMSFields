@@ -10,9 +10,15 @@ import MAMSVectors
 import SwiftUI
 
 internal class Field {
-    private var scale: Double = 1
-    private var radians: Double = 0
-    private var centerPoint: Point2D = Point2D(x: 0, y: 0)
+    internal var scale: Double = 1
+    internal var radians: Double = 0
+    internal var centerPoint: Point2D = Point2D(x: 0, y: 0)
+    
+    init(scale: Double, radians: Double, centerPoint: Point2D) {
+        self.radians = radians
+        self.scale = scale
+        self.centerPoint = centerPoint
+    }
 
     internal func createMirroringRectangles(rectSize: CGSize, yValue: Double) -> Path {
         // establish size

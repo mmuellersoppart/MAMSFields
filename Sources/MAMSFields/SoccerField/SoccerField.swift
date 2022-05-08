@@ -13,9 +13,6 @@ typealias Size2D = Point2D
 
 // modifies the original dimensions, in terms of scale and rotation to fit the given bounds.
 class SoccerField: Field {
-    private var scale: Double = 1
-    private var radians: Double = 0
-    private var centerPoint: Point2D = Point2D(x: 0, y: 0)
     
     var totalField: Path {
         let totalH = SoccerFieldConstants.totalH
@@ -145,11 +142,5 @@ class SoccerField: Field {
                 path.addArc(center: corner.0.asCGPoint, radius: SoccerFieldConstants.cornerArcRadius * scale, startAngle: corner.1, endAngle: corner.1 + Angle(degrees: 90), clockwise: false)
             }
         }
-    }
-    
-    init(scale: Double, radians: Double, centerPoint: Point2D) {
-        self.radians = radians
-        self.scale = scale
-        self.centerPoint = centerPoint
     }
 }
