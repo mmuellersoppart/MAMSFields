@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 import MAMSVectors
 
-typealias Size2D = Point2D
-
 // modifies the original dimensions, in terms of scale and rotation to fit the given bounds.
 class SoccerField: Field {
     
