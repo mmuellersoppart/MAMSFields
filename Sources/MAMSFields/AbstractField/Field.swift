@@ -20,6 +20,40 @@ internal class Field {
         self.centerPoint = centerPoint
     }
 
+    internal static func determineFieldScale(totalFieldSize: Size2D, boundarySize: Size2D, rotation: Double) -> Double {
+        
+        func findClosestIntersection(positionalVector posVector: PositionalVector2D, xBoundaries: Double..., yBoundaries: Double...) -> Point2D? {
+            //TODO: sort x and y boundaries and make sure it goes from least to most.
+            
+            let centerPoint = posVector.origin
+            
+            // find the closest point
+            var points: [Point2D?] = []
+            for xBound in xBoundaries {
+                points.append(posVector.intercept(x: xBound))
+            }
+            
+            for yBound in yBoundaries {
+                points.append(posVector.intercept(y: yBound))
+            }
+            
+            let closestPoint = points.compactMap{$0}.sorted(by: {lhs, rhs in centerPoint.distance(to: lhs) < centerPoint.distance(to: rhs)}).first
+            
+            return closestPoint
+        }
+        
+        let centerPoint = Point2D(x: boundarySize.x/2, y: boundarySize.y/2)
+        let q2PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: totalFieldSize.x/2, y: totalFieldSize.y/2)).copy(radians: rotation)
+        let q3PosVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: totalFieldSize.x/2, y: -totalFieldSize.y/2)).copy(radians: rotation)
+        
+        let q2Intersection = findClosestIntersection(positionalVector: q2PosVector, xBoundaries: 0.0, boundarySize.x, yBoundaries: 0.0, boundarySize.y)
+        let q3Intersection = findClosestIntersection(positionalVector: q3PosVector, xBoundaries: 0.0, boundarySize.x, yBoundaries: 0.0, boundarySize.y)
+        
+        let closestIntersection = centerPoint.distance(to: q2Intersection!) > centerPoint.distance(to: q3Intersection!) ? q3Intersection : q2Intersection
+        
+        return centerPoint.distance(to: closestIntersection!) / centerPoint.distance(to: q2PosVector.tip)
+    }
+    
     internal func createMirroringRectangles(rectSize: CGSize, yValue: Double) -> Path {
         // establish size
         let upperLeftPoint = Point2D(x: centerPoint.x - rectSize.width/2, y: yValue)

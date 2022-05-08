@@ -102,26 +102,6 @@ internal func vectorsToPath(positionalVectors posvecs: [PositionalVector2D]) -> 
     }
 }
 
-internal func findClosestIntersection(positionalVector posVector: PositionalVector2D, xBoundaries: Double..., yBoundaries: Double...) -> Point2D? {
-    //TODO: sort x and y boundaries and make sure it goes from least to most.
-    
-    let centerPoint = posVector.origin
-    
-    // find the closest point
-    var points: [Point2D?] = []
-    for xBound in xBoundaries {
-        points.append(posVector.intercept(x: xBound))
-    }
-    
-    for yBound in yBoundaries {
-        points.append(posVector.intercept(y: yBound))
-    }
-    
-    let closestPoint = points.compactMap{$0}.sorted(by: {lhs, rhs in centerPoint.distance(to: lhs) < centerPoint.distance(to: rhs)}).first
-    
-    return closestPoint
-}
-
 extension Collection where Element == PositionalVector2D {
     func scaleAndRotate(scale: Double, rotate: Double) -> [PositionalVector2D] {
         return self.map { elem in (scale * elem).copy(radians: rotate) }
