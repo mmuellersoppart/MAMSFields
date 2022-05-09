@@ -64,12 +64,28 @@ public struct BasketballFieldView: View {
             
             context.stroke(threePointLinePath, with: .color(strokeColor), lineWidth: strokeWidth)
             
+            let restrictedAreaBoxesPath = basketballField.restrictedAreaBoxes
+            
+            context.stroke(restrictedAreaBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            
+            let outerHoopBoxesPath = basketballField.outerHoopBoxes
+            
+            context.stroke(outerHoopBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            
+            let hoopBoxesPath = basketballField.hoopBoxes
+            
+            context.stroke(hoopBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            
+            let hoopsPath = basketballField.hoops
+            
+            context.stroke(hoopsPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            
         }
     }
 }
 
 struct BasketballFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        BasketballFieldView(radians: Double.pi/4)
+        BasketballFieldView()
     }
 }

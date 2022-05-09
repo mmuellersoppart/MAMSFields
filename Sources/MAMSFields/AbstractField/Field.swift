@@ -63,7 +63,7 @@ internal class Field {
         let upperVectorsAdj: [PositionalVector2D] = upperVectors.scaleAndRotate(scale: scale, rotate: radians)
         let upperGoalPaths = vectorsToPath(positionalVectors: upperVectorsAdj)
         
-        let lowerVectorsAdj: [PositionalVector2D] = upperVectors.map {posvec in reflectOverMidline(midlineY: centerPoint.y, positionalVector: posvec)}.scaleAndRotate(scale: scale, rotate: radians)
+        let lowerVectorsAdj: [PositionalVector2D] = upperVectors.map {posvec in reflectOverMidline(posvec, over: centerPoint.y)}.scaleAndRotate(scale: scale, rotate: radians)
         
         let lowerGoalPaths = vectorsToPath(positionalVectors: lowerVectorsAdj)
         
@@ -73,7 +73,11 @@ internal class Field {
         }
     }
 
-    internal func reflectOverMidline(midlineY: Double, positionalVector: PositionalVector2D) -> PositionalVector2D {
+    internal func reflectOverMidline(_ positionalVector: PositionalVector2D, over midlineY: Double) -> PositionalVector2D {
         return positionalVector.copy(vectorY: -positionalVector.vector.y)
+    }
+    
+    internal func _adj(_ posvec: PositionalVector2D) -> PositionalVector2D {
+        (scale * posvec).copy(radians: radians)
     }
 }
