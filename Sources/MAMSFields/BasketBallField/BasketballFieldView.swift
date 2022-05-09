@@ -44,7 +44,6 @@ public struct BasketballFieldView: View {
             context.fill(fieldPath, with: .color(fillColor))
             context.stroke(fieldPath, with: .color(strokeColor), lineWidth: strokeWidth)
             
-            
             // midline
             let midlinePath = basketballField.midline
             
@@ -60,12 +59,17 @@ public struct BasketballFieldView: View {
             
             context.stroke(centerCircleInnerPath, with: .color(strokeColor), lineWidth: strokeWidth)
             
+            // three point
+            let threePointLinePath = basketballField.threePointBoxes
+            
+            context.stroke(threePointLinePath, with: .color(strokeColor), lineWidth: strokeWidth)
+            
         }
     }
 }
 
 struct BasketballFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        BasketballFieldView(radians: Double.pi / 4)
+        BasketballFieldView(radians: Double.pi/4)
     }
 }
