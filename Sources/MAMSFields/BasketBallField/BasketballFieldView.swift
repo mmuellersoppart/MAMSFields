@@ -28,13 +28,11 @@ public struct BasketballFieldView: View {
         
         Canvas { context, size in
             
-            // find the scale that maximized field in boundary
-            
+            // find the scale that maximized field in boundary (or use the fixed input)
             let scaleToFit = scale ?? Field.determineFieldScale(totalFieldSize: Size2D(x: BasketballFieldConstants.totalW, y: BasketballFieldConstants.totalH), boundarySize: size.asSize2D, rotation: radians)
             
             let basketballField = BasketballField(scale: scaleToFit, radians: radians, centerPoint: Point2D(x: size.width/2, y: size.height/2))
             
-            // field
             let totalFieldPath = basketballField.totalField
             
             context.fill(totalFieldPath, with: .color(.clear))
@@ -42,50 +40,59 @@ public struct BasketballFieldView: View {
             let fieldPath = basketballField.field
             
             context.fill(fieldPath, with: .color(fillColor))
-            context.stroke(fieldPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(fieldPath, context: &context)
             
-            // midline
             let midlinePath = basketballField.midline
             
-            context.stroke(midlinePath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(midlinePath, context: &context)
             
-            // midline circle
             let centerCircleOuterPath = basketballField.centerCircleOuter
             
             context.fill(centerCircleOuterPath, with: .color(fillColor))
-            context.stroke(centerCircleOuterPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(centerCircleOuterPath, context: &context)
             
             let centerCircleInnerPath = basketballField.centerCircleInner
             
-            context.stroke(centerCircleInnerPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(centerCircleInnerPath, context: &context)
             
-            // three point
             let threePointLinePath = basketballField.threePointBoxes
             
-            context.stroke(threePointLinePath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(threePointLinePath, context: &context)
             
-            let restrictedAreaBoxesPath = basketballField.restrictedAreaBoxes
+            let restrictedAreaPath = basketballField.restrictedAreas
             
-            context.stroke(restrictedAreaBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(restrictedAreaPath, context: &context)
             
             let outerHoopBoxesPath = basketballField.outerHoopBoxes
             
-            context.stroke(outerHoopBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(outerHoopBoxesPath, context: &context)
             
             let hoopBoxesPath = basketballField.hoopBoxes
             
-            context.stroke(hoopBoxesPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(hoopBoxesPath, context: &context)
             
             let hoopsPath = basketballField.hoops
             
-            context.stroke(hoopsPath, with: .color(strokeColor), lineWidth: strokeWidth)
+            defaultStroke(hoopsPath, context: &context)
+            
+            let hoopBoxCirclesPath = basketballField.hoopBoxCircles
+            
+            context.stroke(hoopBoxCirclesPath, with: .color(strokeColor), style: StrokeStyle(lineWidth: strokeWidth, dash: [CGFloat(5)]))
+            
+            let hoopBoxCircleHalvesPath = basketballField.hoopBoxCircleHalves
+            
+            defaultStroke(hoopBoxCircleHalvesPath, context: &context)
             
         }
+    }
+    
+    private func defaultStroke(_ path: Path, context: inout GraphicsContext) {
+        context.stroke(path, with: .color(strokeColor), lineWidth: strokeWidth)
     }
 }
 
 struct BasketballFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        BasketballFieldView()
+        BasketballFieldView(radians: Double.pi / 4, strokeWidth: 2.5)
     }
 }
