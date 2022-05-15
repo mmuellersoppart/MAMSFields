@@ -107,6 +107,6 @@ public struct IceHockeyFieldView: View {
 
 struct IceHockeyFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        IceHockeyFieldView(radians: Double.pi/4, strokeWidth: 0.6)
+        IceHockeyFieldView(radians: Double.pi/4, strokeWidth: 2.6)
     }
 }

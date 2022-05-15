@@ -88,6 +88,6 @@ public struct SoccerFieldView: View {
 
 struct SoccerFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        SoccerFieldView(radians: Double.pi/2, strokeWidth: 0.6)
+        SoccerFieldView(radians: Double.pi / 2, strokeWidth: 2.5)
     }
 }

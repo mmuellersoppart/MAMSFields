@@ -97,9 +97,6 @@ internal func vectorsToPath(positionalVectors posvecs: [PositionalVector2D]) -> 
             path.addLine(to: vec.tip.asCGPoint)
         }
         
-        path.move(to: posvecs.last!.tip.asCGPoint)
-        path.addLine(to: posvecs.first!.tip.asCGPoint)
-        
         path.closeSubpath()
     }
 }
