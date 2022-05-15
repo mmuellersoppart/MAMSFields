@@ -11,8 +11,8 @@ import SwiftUI
 
 internal class Field {
     internal var scale: Double = 1
-    internal var radians: Double = 0
     internal var centerPoint: Point2D = Point2D(x: 0, y: 0)
+    internal var radians: Double = 0
     
     init(scale: Double, radians: Double, centerPoint: Point2D) {
         self.radians = radians
@@ -58,7 +58,7 @@ internal class Field {
         // establish size
         let upperLeftPoint = Point2D(x: centerPoint.x - rectSize.width/2, y: yValue)
     
-        let upperVectors: [PositionalVector2D] = boxToVectors(vectorStartPoint: centerPoint, upperLeftPoint: upperLeftPoint, boxSize: rectSize)
+        let upperVectors: [PositionalVector2D] = boxToVectors(vectorOrigin: centerPoint, upperLeftPoint: upperLeftPoint, boxSize: rectSize)
         
         let upperVectorsAdj: [PositionalVector2D] = upperVectors.scaleAndRotate(scale: scale, rotate: radians)
         let upperGoalPaths = vectorsToPath(positionalVectors: upperVectorsAdj)
@@ -80,4 +80,10 @@ internal class Field {
     internal func _adj(_ posvec: PositionalVector2D) -> PositionalVector2D {
         (scale * posvec).copy(radians: radians)
     }
+    
+    func _adj(_ vectors: [PositionalVector2D]) -> [PositionalVector2D] {
+        return vectors.map { elem in (scale * elem).copy(radians: radians) }
+    }
+    
+
 }

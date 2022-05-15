@@ -28,7 +28,7 @@ struct IceHockeyFieldConstants {
     static let fieldCornerRadius: CGFloat = 8.5
     
     // generally for all points
-    static let pointRadius: CGFloat = 0.4
+    static let dotRadius: CGFloat = 0.4
     
     // center stuff
     static let centerLineLength: CGFloat = fieldW
@@ -39,15 +39,15 @@ struct IceHockeyFieldConstants {
     static let neutralAreaW: CGFloat = fieldW
     static let neutralAreaH: CGFloat = 17.66
     
-    // in neutral area
-    static let faceOffDotsH: CGFloat = neutralAreaH - 1.5 * 2
-    static let faceOffDotsW: CGFloat = 13.4
+    // in neutral area (treated like a rectangle)
+    static let neutralfaceOffDotsH: CGFloat = neutralAreaH - 1.5 * 2
+    static let neutralfaceOffDotsW: CGFloat = 13.4
     
     static let scoreKeeperBubbleRadius: CGFloat = 6 / 2
     
     // faceoff zones
-    static let faceOffPointH: CGFloat = fieldH - 2 * (6.7 + 4)
-    static let faceOffPointW: CGFloat = faceOffDotsW
+    static let faceOffCircleDotsH: CGFloat = fieldH - 2 * (6.7 + 4)
+    static let faceOffCircleDotsW: CGFloat = neutralfaceOffDotsW
     
     static let faceoffAreaLineLength: CGFloat = 10.2
     static let faceoffAreaLineSeparation: CGFloat = 0.9
@@ -64,4 +64,5 @@ struct IceHockeyFieldConstants {
     static let goalH: CGFloat = 1
     static let goalW: CGFloat = 1.83
     
+    static let refereeCreaseRadius: CGFloat = centerCircleRadius * 0.9
 }

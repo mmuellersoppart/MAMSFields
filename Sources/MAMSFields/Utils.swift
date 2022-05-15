@@ -75,13 +75,13 @@ internal func vectorForEachQuadrant(positionalVector posvec: PositionalVector2D)
 ///   - upperLeftPoint: Upper left point of the box
 ///   - boxSize: The box's height and width
 /// - Returns: Positional Vectors that describe the box
-internal func boxToVectors(vectorStartPoint: Point2D, upperLeftPoint: Point2D, boxSize: CGSize) -> [PositionalVector2D] {
+internal func boxToVectors(vectorOrigin: Point2D, upperLeftPoint: Point2D, boxSize: CGSize) -> [PositionalVector2D] {
     let upperRightPoint = Point2D(x: upperLeftPoint.x + Double(boxSize.width), y: upperLeftPoint.y)
     let lowerLeftPoint = Point2D(x: upperLeftPoint.x, y: upperLeftPoint.y + Double(boxSize.height))
     let lowerRightPoint = Point2D(x: upperLeftPoint.x + Double(boxSize.width), y: upperLeftPoint.y + Double(boxSize.height))
     
     let upperPoints = [upperLeftPoint, upperRightPoint, lowerRightPoint, lowerLeftPoint]
-    let upperVectors = upperPoints.map { pt in PositionalVector2D(start: vectorStartPoint, end: pt)}
+    let upperVectors = upperPoints.map { pt in PositionalVector2D(start: vectorOrigin, end: pt)}
     
     return upperVectors
 }
@@ -99,7 +99,17 @@ internal func vectorsToPath(positionalVectors posvecs: [PositionalVector2D]) -> 
         
         path.move(to: posvecs.last!.tip.asCGPoint)
         path.addLine(to: posvecs.first!.tip.asCGPoint)
+        
+        path.closeSubpath()
     }
+}
+
+internal func fourPoints(size: Size2D, customCenterPoint: Point2D) -> [PositionalVector2D] {
+    let topY = customCenterPoint.y - size.y / 2
+    let leftX = customCenterPoint.x - size.x / 2
+    
+    let upperLeft = PositionalVector2D(start: customCenterPoint, end: Point2D(x: leftX, y: topY))
+    return vectorForEachQuadrant(positionalVector: upperLeft)
 }
 
 extension Collection where Element == PositionalVector2D {

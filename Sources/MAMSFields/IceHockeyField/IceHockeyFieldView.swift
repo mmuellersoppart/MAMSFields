@@ -15,7 +15,7 @@ public struct IceHockeyFieldView: View {
     var fillColor: Color = Color.blue
     var scale: Double?
     
-    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green, strokeWidth: Double = 1, scale: Double? = nil) {
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.blue, strokeWidth: Double = 1, scale: Double? = nil) {
 
         self.scale = scale
         self.radians = radians
@@ -27,6 +27,15 @@ public struct IceHockeyFieldView: View {
     public var body: some View {
         
         Canvas { context, size in
+            
+            func defaultFill(_ path: Path) {
+                context.fill(path, with: .color(fillColor))
+            }
+            
+            func defaultStroke(_ path: Path) {
+                context.stroke(path, with: .color(strokeColor), lineWidth: strokeWidth)
+            }
+
             
             // find the scale that maximized field in boundary
             
@@ -43,24 +52,57 @@ public struct IceHockeyFieldView: View {
             
             let fieldPath = iceHockeyField.field
             
-            defaultFill(fieldPath.0, context: &context)
-            defaultStroke(fieldPath.0, context: &context)
+            // circles
+            defaultFill(fieldPath.0)
+            defaultStroke(fieldPath.0)
             
-            defaultFill(fieldPath.1, context: &context)
+            // fill pill
+            defaultFill(fieldPath.1)
             
-            defaultStroke(fieldPath.2, context: &context)
-           
+            // missing outlines
+            defaultStroke(fieldPath.2)
+            
+            // midline
+            let midlinePath = iceHockeyField.midline
+            
+            defaultStroke(midlinePath)
+            
+            let centerOuterCirclePath = iceHockeyField.centerOuterCircle
+            
+            defaultStroke(centerOuterCirclePath)
+            
+            let centerDotPath = iceHockeyField.centerDot
+            
+            defaultStroke(centerDotPath)
+            
+            // neutral area
+            let neutralAreaPath = iceHockeyField.neutralArea
+            defaultStroke(neutralAreaPath)
+            
+            let neutralFaceoffDots = iceHockeyField.neutralFaceoffDots
+            defaultStroke(neutralFaceoffDots)
+            
+            let faceoffCirclesPath = iceHockeyField.faceOffCircles
+            defaultStroke(faceoffCirclesPath.underlines)
+            
+            defaultFill(faceoffCirclesPath.outerCircles)
+            defaultStroke(faceoffCirclesPath.outerCircles)
+            
+            defaultStroke(faceoffCirclesPath.dots)
+            
+            let goalLinesPath = iceHockeyField.goalLines
+            defaultStroke(goalLinesPath)
+            
+            let goalsPath = iceHockeyField.goals
+            defaultStroke(goalsPath)
+            
+            let goalCreasesPath = iceHockeyField.goalCreases
+            defaultStroke(goalCreasesPath)
+            
+            let refereeCreasePath = iceHockeyField.refereeCrease
+            defaultStroke(refereeCreasePath)
         }
     }
-    
-    private func defaultFill(_ path: Path, context: inout GraphicsContext) {
-        context.fill(path, with: .color(fillColor))
-    }
-    
-    private func defaultStroke(_ path: Path, context: inout GraphicsContext) {
-        context.stroke(path, with: .color(strokeColor), lineWidth: strokeWidth)
-    }
-
 }
 
 struct IceHockeyFieldView_Previews: PreviewProvider {
