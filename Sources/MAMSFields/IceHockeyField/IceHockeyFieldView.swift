@@ -48,7 +48,7 @@ public struct IceHockeyFieldView: View {
             // field
             let totalFieldPath = iceHockeyField.totalField
             
-            context.fill(totalFieldPath, with: .color(.yellow))
+            context.fill(totalFieldPath, with: .color(.clear))
             
             let fieldPath = iceHockeyField.field
             
