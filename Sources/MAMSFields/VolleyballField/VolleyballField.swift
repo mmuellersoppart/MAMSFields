@@ -11,7 +11,7 @@ import MAMSVectors
 import CoreGraphics
 
 // modifies the original dimensions, in terms of scale and rotation to fit the given bounds.
-class VolleyballField: Field {
+public class VolleyballField: Field {
     
     private typealias Constants = VolleyballFieldConstants
     
@@ -30,6 +30,25 @@ class VolleyballField: Field {
         return centerArea(size: totalSize)
     }
     
+    var totalBoundingBoxSize: Size2D {
+        let totalSize = Size2D(x: Constants.totalW, y: Constants.totalH)
+        
+        let topLeftVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: -totalSize.x/2, y: -totalSize.y/2))
+        let totalFieldVectors = vectorForEachQuadrant(positionalVector: topLeftVector)
+        
+        // apply modifications
+        let totalFieldVectorsAdj = _adj(totalFieldVectors)
+        
+        let xValues = totalFieldVectorsAdj.map {posvec in posvec.tip.x}
+        let maxX = xValues.max()!
+        let minX = xValues.min()!
+        
+        let yValues = totalFieldVectorsAdj.map {posvec in posvec.tip.y}
+        let maxY = yValues.max()!
+        let minY = yValues.min()!
+        
+        return Size2D(x: maxX - minX, y: maxY - minY)
+    }
 
     var field: Path {
         let fieldSize = Constants.fieldSize

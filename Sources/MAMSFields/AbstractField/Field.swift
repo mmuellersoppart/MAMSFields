@@ -9,7 +9,7 @@ import Foundation
 import MAMSVectors
 import SwiftUI
 
-internal class Field {
+public class Field {
     internal var scale: Double = 1
     internal var centerPoint: Point2D = Point2D(x: 0, y: 0)
     internal var radians: Double = 0
