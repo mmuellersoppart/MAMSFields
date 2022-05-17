@@ -19,6 +19,19 @@ public class Field {
         self.scale = scale
         self.centerPoint = centerPoint
     }
+    
+    init(scale: Double?, radians: Double, totalW: Double, totalH: Double, boundingW: Double, boundingH: Double) {
+        if let scale = scale {
+            self.scale = scale
+        } else {
+            let totalSize = Size2D(x: totalW, y: totalH)
+            let boundingSize = Size2D(x: boundingW, y: boundingH)
+            self.scale = Field.determineFieldScale(totalFieldSize: totalSize, boundarySize: boundingSize, rotation: radians)
+        }
+        
+        self.radians = radians
+        self.centerPoint = Point2D(x: boundingW / 2, y: boundingH / 2)
+    }
 
     internal static func determineFieldScale(totalFieldSize: Size2D, boundarySize: Size2D, rotation: Double) -> Double {
         
