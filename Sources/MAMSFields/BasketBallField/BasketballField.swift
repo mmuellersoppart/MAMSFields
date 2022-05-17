@@ -9,7 +9,7 @@ import Foundation
 import MAMSVectors
 import SwiftUI
 
-class BasketballField: Field {
+public class BasketballField: Field {
     
     private typealias Constants = BasketballFieldConstants
     
