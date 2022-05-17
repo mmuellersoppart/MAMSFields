@@ -14,10 +14,23 @@ public class Field {
     internal var centerPoint: Point2D = Point2D(x: 0, y: 0)
     internal var radians: Double = 0
     
-    init(scale: Double, radians: Double, centerPoint: Point2D) {
+    public init(scale: Double, radians: Double, centerPoint: Point2D) {
         self.radians = radians
         self.scale = scale
         self.centerPoint = centerPoint
+    }
+    
+    public init(scale: Double?, radians: Double, totalW: Double, totalH: Double, boundingW: Double, boundingH: Double) {
+        if let scale = scale {
+            self.scale = scale
+        } else {
+            let totalSize = Size2D(x: totalW, y: totalH)
+            let boundingSize = Size2D(x: boundingW, y: boundingH)
+            self.scale = Field.determineFieldScale(totalFieldSize: totalSize, boundarySize: boundingSize, rotation: radians)
+        }
+        
+        self.radians = radians
+        self.centerPoint = Point2D(x: boundingW / 2, y: boundingH / 2)
     }
 
     internal static func determineFieldScale(totalFieldSize: Size2D, boundarySize: Size2D, rotation: Double) -> Double {
