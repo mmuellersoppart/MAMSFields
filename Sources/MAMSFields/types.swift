@@ -8,4 +8,4 @@
 import Foundation
 import MAMSVectors
 
-typealias Size2D = Point2D
+public typealias Size2D = Point2D

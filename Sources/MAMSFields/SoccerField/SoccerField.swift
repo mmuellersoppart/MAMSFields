@@ -27,7 +27,7 @@ public class SoccerField: Field {
         return vectorsToPath(positionalVectors: totalFieldVectorsAdj)
     }
     
-    var totalBoundingBoxSize: Size2D {
+    public var totalBoundingBoxSize: Size2D {
         let totalSize = Size2D(x: Constants.totalW, y: Constants.totalH)
         
         let topLeftVector = PositionalVector2D(point: centerPoint, vector: Vector2D(x: -totalSize.x/2, y: -totalSize.y/2))
