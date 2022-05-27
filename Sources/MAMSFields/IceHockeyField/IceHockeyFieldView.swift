@@ -13,15 +13,18 @@ public struct IceHockeyFieldView: View {
     var strokeColor: Color = Color.white
     var strokeWidth: Double = 1.0
     var fillColor: Color = Color.blue
-    var scale: Double?
+    var scale: Double
+    // should the field try to maximize its size. Or be of fixed size.
+    var isMaximized: Bool = true
     
-    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.blue, strokeWidth: Double = 1, scale: Double? = nil) {
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.blue, strokeWidth: Double = 1, scale: Double = 1, isMaximized: Bool = true) {
 
         self.scale = scale
         self.radians = radians
         self.strokeColor = strokeColor
         self.fillColor = fillColor
         self.strokeWidth = strokeWidth
+        self.isMaximized = isMaximized
     }
     
     public var body: some View {
@@ -41,7 +44,12 @@ public struct IceHockeyFieldView: View {
             
             let totalSize = IceHockeyFieldConstants.totalSize
             
-            let scaleToFit = scale ?? Field.determineFieldScale(totalFieldSize: totalSize, boundarySize: size.asSize2D, rotation: radians)
+            var scaleToFit = 1.0
+            if isMaximized {
+                scaleToFit = scale * Field.determineFieldScale(totalFieldSize: Size2D(x: totalSize.x, y: totalSize.y), boundarySize: size.asSize2D, rotation: radians)
+            } else {
+                scaleToFit = scale
+            }
             
             let iceHockeyField = IceHockeyField(scale: scaleToFit, radians: radians, centerPoint: Point2D(x: size.width/2, y: size.height/2))
             
@@ -103,10 +111,24 @@ public struct IceHockeyFieldView: View {
             defaultStroke(refereeCreasePath)
         }
     }
+    
+    public func totalSize(containerSize: Size2D) -> Size2D {
+        // find the scale that maximized field in boundary (or use the fixed input)
+        var scaleToFit = 1.0
+        if isMaximized {
+            scaleToFit = scale * Field.determineFieldScale(totalFieldSize: Size2D(x: IceHockeyFieldConstants.totalW, y: IceHockeyFieldConstants.totalH), boundarySize: containerSize, rotation: radians)
+        } else {
+            scaleToFit = scale
+        }
+        
+        let iceHockeyField = IceHockeyField(scale: scaleToFit, radians: radians, centerPoint: Point2D(x: containerSize.x/2, y: containerSize.y/2))
+        
+        return iceHockeyField.totalBoundingBoxSize
+    }
 }
 
 struct IceHockeyFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        IceHockeyFieldView(radians: Double.pi/4, strokeWidth: 2.6)
+        IceHockeyFieldView(radians: Double.pi/4, strokeWidth: 2.6, scale: 0.5, isMaximized: true)
     }
 }

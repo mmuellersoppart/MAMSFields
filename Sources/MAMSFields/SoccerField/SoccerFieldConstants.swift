@@ -18,8 +18,7 @@ struct SoccerFieldConstants {
     
     static let totalH: CGFloat = fieldH + goalH * 2
     static let totalW: CGFloat = fieldW
-    static let ratioHW: CGFloat = totalH/totalW
-    static let ratioWH: CGFloat = totalW/totalH
+    static let totalSize: Size2D = Size2D(x: totalW, y: totalH)
     
     static let centerPoint: CGPoint = CGPoint(x: totalW / 2, y: totalH / 2)
     

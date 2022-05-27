@@ -13,15 +13,17 @@ public struct SoccerFieldView: View {
     var strokeColor: Color = Color.white
     var strokeWidth: Double = 1.0
     var fillColor: Color = Color.green
-    var scale: Double?
+    var scale: Double
+    var isMaximized: Bool = true
     
-    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green, strokeWidth: Double = 1, scale: Double? = nil) {
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.green, strokeWidth: Double = 1, scale: Double = 1, isMaximized: Bool = true) {
 
         self.scale = scale
         self.radians = radians
         self.strokeColor = strokeColor
         self.fillColor = fillColor
         self.strokeWidth = strokeWidth
+        self.isMaximized = isMaximized
     }
     
     public var body: some View {
@@ -29,8 +31,13 @@ public struct SoccerFieldView: View {
         Canvas { context, size in
             
             // find the scale that maximized field in boundary
-            
-            let scaleToFit = scale ?? Field.determineFieldScale(totalFieldSize: Size2D(x: SoccerFieldConstants.totalW, y: SoccerFieldConstants.totalH), boundarySize: size.asSize2D, rotation: radians)
+            let totalSize = SoccerFieldConstants.totalSize
+            var scaleToFit = 1.0
+            if isMaximized {
+                scaleToFit = scale * Field.determineFieldScale(totalFieldSize: Size2D(x: totalSize.x, y: totalSize.y), boundarySize: size.asSize2D, rotation: radians)
+            } else {
+                scaleToFit = scale
+            }
             
             let soccerField = SoccerField(scale: scaleToFit, radians: radians, centerPoint: Point2D(x: size.width/2, y: size.height/2))
             
@@ -84,10 +91,25 @@ public struct SoccerFieldView: View {
             context.stroke(cornerPaths, with: .color(strokeColor), lineWidth: strokeWidth)
         }
     }
+    
+    public func totalSize(containerSize: Size2D) -> Size2D {
+        // find the scale that maximized field in boundary (or use the fixed input)
+        var scaleToFit = 1.0
+        if isMaximized {
+            scaleToFit = scale * Field.determineFieldScale(totalFieldSize: Size2D(x: SoccerFieldConstants.totalW, y: SoccerFieldConstants.totalH), boundarySize: containerSize, rotation: radians)
+        } else {
+            scaleToFit = scale
+        }
+        
+        let soccerField = SoccerField(scale: scaleToFit, radians: radians, centerPoint: Point2D(x: containerSize.x/2, y: containerSize.y/2))
+        
+        return soccerField.totalBoundingBoxSize
+    }
+    
 }
 
 struct SoccerFieldView_Previews: PreviewProvider {
     static var previews: some View {
-        SoccerFieldView(radians: Double.pi / 2, strokeWidth: 2.5)
+        SoccerFieldView(radians: Double.pi / 2, strokeWidth: 2.5, scale: 0.95, isMaximized: true)
     }
 }
