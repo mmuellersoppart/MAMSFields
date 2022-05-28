@@ -13,6 +13,7 @@ public struct VolleyballFieldView: View {
     var strokeColor: Color = Color.white
     var strokeWidth: Double = 1.0
     var fillColor: Color = Color.blue
+    var freeZoneFillColor: Color = Color.yellow
     var scale: Double
     var isMaximized: Bool = true
     
@@ -29,8 +30,6 @@ public struct VolleyballFieldView: View {
     public var body: some View {
         
         Canvas { context, size in
-            
-            let freeZoneColor = Color.yellow
             
             func defaultFill(_ path: Path) {
                 context.fill(path, with: .color(fillColor))
@@ -58,7 +57,7 @@ public struct VolleyballFieldView: View {
             
             // free zone
             let totalPath = volleyballField.total
-            context.fill(totalPath, with: .color(freeZoneColor))
+            context.fill(totalPath, with: .color(freeZoneFillColor))
             
             
             let fieldPath = volleyballField.field
@@ -72,7 +71,7 @@ public struct VolleyballFieldView: View {
             defaultStroke(attackLinesPath)
             
             let netPoleDotsPath = volleyballField.netPoles
-            context.fill(netPoleDotsPath, with: .color(freeZoneColor))
+            context.fill(netPoleDotsPath, with: .color(freeZoneFillColor))
             defaultStroke(netPoleDotsPath)
         }
     }
