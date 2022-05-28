@@ -17,12 +17,13 @@ public struct VolleyballFieldView: View {
     var scale: Double
     var isMaximized: Bool = true
     
-    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.blue, strokeWidth: Double = 1, scale: Double = 1, isMaximized: Bool = true) {
+    public init(radians: Double = 0, strokeColor: Color = Color.white, fillColor: Color = Color.blue, freeZoneFillColor: Color = Color.yellow, strokeWidth: Double = 1, scale: Double = 1, isMaximized: Bool = true) {
 
         self.scale = scale
         self.radians = radians
         self.strokeColor = strokeColor
         self.fillColor = fillColor
+        self.freeZoneFillColor = freeZoneFillColor
         self.strokeWidth = strokeWidth
         self.isMaximized = isMaximized
     }
